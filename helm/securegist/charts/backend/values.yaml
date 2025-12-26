@@ -1,0 +1,23 @@
+image:
+  repository: securegist-backend
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 8000
+
+# Default empty environment, will be filled from parent/global
+env:
+  db:
+    host: ""
+    name: ""
+    user: ""
+    password: ""
+  s3:
+    host: ""
+    endpoint_url: ""
+    public_endpoint_url: ""
+    access_key: ""
+    secret_key: ""
+    bucket: ""

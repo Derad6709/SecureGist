@@ -1,0 +1,32 @@
+global:
+  storage:
+    bucket: "securegist"
+
+postgresql:
+  primary:
+    persistence:
+      enabled: false
+
+minio:
+  persistence:
+    enabled: false
+
+ingress:
+  hosts:
+    - host: "dev.securegist.local"
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: frontend
+            port: 80
+        - path: /api
+          pathType: Prefix
+          service:
+            name: backend
+            port: 8000
+        - path: /s3
+          pathType: Prefix
+          service:
+            name: minio
+            port: 9000

@@ -1,0 +1,117 @@
+# Global configuration shared across all subcharts
+global:
+  postgresql:
+    auth:
+      username: &dbUser user
+      password: &dbPass password
+      database: &dbName securegist
+  minio:
+    auth:
+      rootUser: &s3User minioadmin
+      rootPassword: &s3Pass minioadmin
+  storage:
+    bucket: &s3Bucket securegist
+    # These will be overridden or calculated
+    endpoint_url: ""
+    public_endpoint_url: "/s3"
+
+# Subchart: PostgreSQL
+postgresql:
+  enabled: true
+  auth:
+    username: *dbUser
+    password: *dbPass
+    database: *dbName
+  primary:
+    persistence:
+      size: 1Gi
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+
+# Subchart: Minio
+minio:
+  enabled: true
+  rootUser: *s3User
+  rootPassword: *s3Pass
+  mode: standalone
+  replicas: 1
+  persistence:
+    size: 1Gi
+  buckets:
+    - name: *s3Bucket
+      policy: public
+      purge: false
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 250m
+
+# Subchart: Backend
+backend:
+  enabled: true
+  image:
+    repository: ghcr.io/derad6709/securegist-backend
+    tag: latest
+  env:
+    db:
+      host: "" # Calculated from Release.Name
+    s3:
+      host: "" # Calculated from Release.Name
+
+# Subchart: Frontend
+frontend:
+  enabled: true
+  image:
+    repository: ghcr.io/derad6709/securegist-frontend
+    tag: latest
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: traefik
+  hosts:
+    - host: "securegist.local"
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: frontend
+            port: 80
+        - path: /api
+          pathType: Prefix
+          service:
+            name: backend
+            port: 8000
+        - path: /s3
+          pathType: Prefix
+          service:
+            name: minio
+            port: 9000
+  tls: []
+
+# Subchart: Traefik
+traefik:
+  enabled: true
+  ingressClass:
+    enabled: true
+    name: traefik
+  api:
+    dashboard: true
+  ingressRoute:
+    dashboard:
+      enabled: true
+  providers:
+    kubernetesIngress:
+      enabled: true
+  installCRDs: true
+  service:
+    enabled: true
+    type: LoadBalancer

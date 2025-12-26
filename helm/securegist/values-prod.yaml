@@ -1,0 +1,45 @@
+# Production environment overrides
+global:
+  postgresql:
+    auth:
+      username: prod-user
+      password: prod-secure-password
+  minio:
+    auth:
+      rootUser: prod-admin
+      rootPassword: prod-secure-password
+
+postgresql:
+  primary:
+    persistence:
+      size: 10Gi
+    resources:
+      limits:
+        memory: "2Gi"
+        cpu: "1"
+
+minio:
+  rootUser: prod-admin
+  rootPassword: prod-secure-password
+  persistence:
+    size: 50Gi
+
+ingress:
+  hosts:
+    - host: "securegist.local"
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: frontend
+            port: 80
+        - path: /api
+          pathType: Prefix
+          service:
+            name: backend
+            port: 8000
+        - path: /s3
+          pathType: Prefix
+          service:
+            name: minio
+            port: 9000

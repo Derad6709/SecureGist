@@ -1,0 +1,34 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "securegist.fullname" . }}
+  labels:
+    {{- include "securegist.labels" . | nindent 4 }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s-s3-rewrite@kubernetescrd" .Release.Namespace (include "securegist.fullname" .) | quote }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  tls:
+    - hosts:
+      {{- range .Values.ingress.hosts }}
+        - {{ .host | quote }}
+      {{- end }}
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ if eq .service.name "backend" }}{{ printf "%s-%s" $.Release.Name "backend" }}{{ else if eq .service.name "frontend" }}{{ printf "%s-%s" $.Release.Name "frontend" }}{{ else if eq .service.name "minio" }}{{ index $.Values "minio" "fullnameOverride" | default (printf "%s-%s" $.Release.Name "minio") }}{{ else }}{{ .service.name }}{{ end }}
+                port:
+                  number: {{ .service.port }}
+          {{- end }}
+    {{- end }}
+{{- end -}}

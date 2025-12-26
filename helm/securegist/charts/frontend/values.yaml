@@ -1,0 +1,8 @@
+image:
+  repository: securegist-frontend
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 80
