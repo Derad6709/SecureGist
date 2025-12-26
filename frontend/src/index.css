@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    @apply bg-gray-50 text-slate-900 dark:bg-[#0d1117] dark:text-slate-100;
+}
+
+/* Modern scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-700 rounded-full border-4 border-transparent bg-clip-content hover:bg-gray-400 dark:hover:bg-gray-600;
+}
+
+@layer components {
+
+    /* GitHub-like Markdown Fixes */
+    .prose {
+        @apply font-sans;
+    }
+
+    .prose pre {
+        @apply m-0 p-4 rounded-lg overflow-x-auto bg-gray-50 border border-gray-200 font-mono;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Dark mode override for code blocks if the user's system is dark */
+    .dark .prose pre {
+        @apply bg-[#161b22] border-gray-700;
+    }
+
+    /* Remove default quotes from typography plugin */
+    .prose code::before {
+        content: "" !important;
+    }
+
+    .prose code::after {
+        content: "" !important;
+    }
+
+    .prose code {
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Table styles that prose might miss */
+    .prose table {
+        @apply my-4 w-full overflow-hidden rounded-lg;
+    }
+
+    .prose thead {
+        @apply bg-gray-50 dark:bg-gray-800;
+    }
+
+    .prose tr:nth-child(even) {
+        @apply bg-gray-50/50 dark:bg-gray-800/50;
+    }
+
+    /* GFM Task Lists */
+    .prose ul:has(input[type="checkbox"]) {
+        @apply list-none pl-0;
+    }
+
+    .prose ul>li:has(input[type="checkbox"]) {
+        @apply pl-2 flex items-start gap-2;
+    }
+
+    .prose ul>li:has(input[type="checkbox"])::before {
+        @apply hidden;
+    }
+
+    .prose input[type="checkbox"] {
+        @apply mt-1;
+    }
+}
