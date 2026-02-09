@@ -71,9 +71,12 @@ const keyStr = window.location.hash.slice(1);
 const key = await importKey(keyStr);
 
 // Fetch and decrypt
-const blob = await fetch(`/api/gists/${id}/download`);
-const iv = blob.slice(0, 12);
-const ciphertext = blob.slice(12);
+const response = await fetch(`/api/gists/${id}/download`);
+const arrayBuffer = await response.arrayBuffer();
+const data = new Uint8Array(arrayBuffer);
+
+const iv = data.slice(0, 12);
+const ciphertext = data.slice(12);
 
 const decrypted = await crypto.subtle.decrypt(
   { name: 'AES-GCM', iv },
