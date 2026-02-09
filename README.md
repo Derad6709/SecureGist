@@ -1,6 +1,6 @@
 # 🔐 SecureGist
 
-Secure code snippet sharing with **client-side end-to-end encryption**. Server never sees your plaintext data.
+Secure code snippet sharing with **client-side end-to-end encryption** or even in local mode. Server never sees your plaintext data.
 
 The backend and frontend were all vibecoded.
 ## Features
@@ -66,6 +66,12 @@ Access at: http://localhost
 
 ## How It Works
 
+### Local Mode
+1. Create gist -> browser compresses it
+2. Share URL with data in fragment: `/gist/abc123#CompressedData`
+3. Recipient uncompress data in browser
+
+### Remote Mode
 1. Create gist → Browser encrypts with random AES-256 key
 2. Encrypted blob uploaded to S3, metadata to PostgreSQL
 3. Share URL with key in fragment: `/gist/abc123#key`
