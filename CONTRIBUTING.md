@@ -486,12 +486,10 @@ Security is critical for SecureGist. Special guidelines apply:
 
 ### Reporting Security Issues
 
-**DO NOT** open public issues for security vulnerabilities.
-
-Instead:
-1. Email security@securegist.example.com
+To report security vulnerabilities:
+1. Open a [GitHub Issue](https://github.com/Derad6709/SecureGist/issues) with "[SECURITY]" in the title
 2. Include detailed description and reproduction steps
-3. Wait for confirmation before public disclosure
+3. Maintainers will respond and may move discussion to a private channel if needed
 
 ### Security Code Review
 
@@ -549,8 +547,7 @@ Thank you for contributing to SecureGist! 🎉
 ## Questions?
 
 - 💬 [GitHub Discussions](https://github.com/Derad6709/SecureGist/discussions)
-- 📧 Email: contribute@securegist.example.com
-- 📖 [Documentation](https://github.com/Derad6709/SecureGist/wiki)
+- 🐛 [GitHub Issues](https://github.com/Derad6709/SecureGist/issues)
 
 ---
 

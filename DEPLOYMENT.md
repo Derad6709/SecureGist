@@ -646,7 +646,6 @@ Before going to production:
 For deployment issues:
 - 📖 [GitHub Discussions](https://github.com/Derad6709/SecureGist/discussions)
 - 🐛 [Report Issues](https://github.com/Derad6709/SecureGist/issues)
-- 📧 Email: support@securegist.example.com
 
 ---
 

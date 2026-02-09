@@ -329,15 +329,16 @@ Keys exist only:
 
 We take security seriously. If you discover a security vulnerability:
 
-1. **DO NOT** open a public GitHub issue
-2. Email security reports to: [Your Security Contact Email]
-3. Include:
+1. Open a [GitHub Issue](https://github.com/Derad6709/SecureGist/issues) with "[SECURITY]" in the title
+2. Include:
    - Description of the vulnerability
    - Steps to reproduce
    - Potential impact
    - Suggested fix (if any)
+3. Maintainers will respond within 48 hours
+4. For sensitive issues, discussion may be moved to a private channel
 
-We will respond within 48 hours and work with you to address the issue.
+We will work with you to address the issue and coordinate disclosure.
 
 ### Security Hall of Fame
 
