@@ -20,6 +20,49 @@ docker-compose up -d
 
 Access at: http://localhost
 
+## Architecture
+
+```
+┌─────────────┐           ┌──────────────┐         ┌──────────┐
+│   Browser   │           │   FastAPI    │         │PostgreSQL│
+│  (React)    │◄─────────►│   Backend    │◄───────►│  + S3    │
+│             │  Encrypted │              │ Metadata│          │
+│ Crypto Keys │   Blobs    │ No Plaintext │  Only   │ Encrypted│
+└─────────────┘           └──────────────┘         └──────────┘
+      │
+      └─► Encryption Key shared via URL fragment (#key)
+          Never sent to server
+```
+
+### Components
+
+**Frontend (React + TypeScript)**
+- Client-side AES-256-GCM encryption using Web Crypto API
+- Multi-file code editor with syntax highlighting
+- QR code generation for easy sharing
+- No plaintext ever leaves the browser
+
+**Backend (FastAPI)**
+- Async Python API with SQLAlchemy ORM
+- Handles only encrypted blobs and metadata
+- Presigned S3 URLs for direct client uploads
+- Access control: read limits and expiration
+
+**Database (PostgreSQL)**
+- Stores gist metadata (UUID, timestamps, read count)
+- Tracks expiration and access limits
+- No plaintext content stored
+
+**Storage (MinIO/S3)**
+- Object storage for encrypted blobs
+- CORS-enabled for browser direct upload
+- Automatic cleanup of expired gists
+
+**Reverse Proxy (Traefik)**
+- Routes requests to frontend/backend/S3
+- Load balancing and SSL termination
+- Dashboard for monitoring
+
 ## How It Works
 
 1. Create gist → Browser encrypts with random AES-256 key
@@ -35,6 +78,68 @@ Access at: http://localhost
 **Frontend**: React + TypeScript + Web Crypto API  
 **Backend**: FastAPI + PostgreSQL + S3 (MinIO)  
 **Deploy**: Docker Compose or Kubernetes/Helm
+
+## Deployment
+
+### Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+Services included:
+- Frontend (React on nginx)
+- Backend (FastAPI)
+- PostgreSQL database
+- MinIO (S3 storage)
+- Traefik (reverse proxy)
+
+### Kubernetes with Helm
+
+**Install dependencies:**
+```bash
+cd helm/securegist
+helm dependency update
+```
+
+**Deploy to dev:**
+```bash
+helm install securegist . \
+  -f values.yaml \
+  -f values-dev.yaml \
+  --create-namespace \
+  --namespace securegist-dev
+```
+
+**Deploy to production:**
+```bash
+helm install securegist . \
+  -f values.yaml \
+  -f values-prod.yaml \
+  --create-namespace \
+  --namespace securegist-prod
+```
+
+**Check status:**
+```bash
+kubectl get pods -n securegist-prod
+kubectl get svc -n securegist-prod
+```
+
+**Upgrade:**
+```bash
+helm upgrade securegist . \
+  -f values-prod.yaml \
+  --namespace securegist-prod
+```
+
+**Helm chart includes:**
+- Backend and frontend deployments with configurable replicas
+- PostgreSQL via Bitnami chart (with persistence)
+- MinIO for S3-compatible storage
+- Traefik ingress controller
+- Horizontal pod autoscaling support
+- Resource limits and health checks
 
 ## Development
 
