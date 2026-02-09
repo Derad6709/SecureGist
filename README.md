@@ -2,6 +2,7 @@
 
 Secure code snippet sharing with **client-side end-to-end encryption**. Server never sees your plaintext data.
 
+The backend and frontend were all vibecoded.
 ## Features
 
 - 🔒 **AES-256-GCM encryption** in browser
@@ -26,8 +27,8 @@ Access at: http://localhost
 ┌─────────────┐           ┌──────────────┐         ┌──────────┐
 │   Browser   │           │   FastAPI    │         │PostgreSQL│
 │  (React)    │◄─────────►│   Backend    │◄───────►│  + S3    │
-│             │  Encrypted │              │ Metadata│          │
-│ Crypto Keys │   Blobs    │ No Plaintext │  Only   │ Encrypted│
+│             │  Encrypted│              │ Metadata│          │
+│ Crypto Keys │   Blobs   │ No Plaintext │  Only   │ Encrypted│
 └─────────────┘           └──────────────┘         └──────────┘
       │
       └─► Encryption Key shared via URL fragment (#key)
