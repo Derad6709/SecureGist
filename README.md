@@ -177,7 +177,7 @@ uv run uvicorn src.main:app --reload
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
