@@ -26,6 +26,9 @@ Access at: http://localhost:5173
 ```bash
 # .env
 VITE_API_URL=/api
+VITE_LOCAL_ONLY=false
+VITE_USE_HASH_ROUTER=false
+VITE_BASE_PATH=/
 ```
 
 ## Scripts
@@ -105,6 +108,19 @@ src/
 npm run build
 # Output: dist/
 ```
+
+## GitHub Pages (Local-only)
+
+For GitHub Pages in local-only mode you need the correct base path, and **do not** use hash routing because the URL hash is used to store the gist data.
+
+```bash
+# .env for GitHub Pages
+VITE_LOCAL_ONLY=true
+VITE_USE_HASH_ROUTER=false
+VITE_BASE_PATH=/<your-repo-name>/
+```
+
+Then build and publish the `dist/` folder to GitHub Pages.
 
 ### Docker
 

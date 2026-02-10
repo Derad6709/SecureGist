@@ -1,8 +1,9 @@
 # 🔐 SecureGist
 
-Secure code snippet sharing with **client-side end-to-end encryption** or even in local mode. Server never sees your plaintext data.
+Secure code snippet sharing with **client-side end-to-end encryption** or even in URL mode. Server never sees your plaintext data.
 
 The backend and frontend were all vibecoded.
+
 ## Features
 
 - 🔒 **AES-256-GCM encryption** in browser
@@ -19,11 +20,11 @@ cd SecureGist
 docker-compose up -d
 ```
 
-Access at: http://localhost
+Access at: <http://localhost>
 
 ## Architecture
 
-```
+```txt
 ┌─────────────┐           ┌──────────────┐         ┌──────────┐
 │   Browser   │           │   FastAPI    │         │PostgreSQL│
 │  (React)    │◄─────────►│   Backend    │◄───────►│  + S3    │
@@ -37,41 +38,48 @@ Access at: http://localhost
 
 ### Components
 
-**Frontend (React + TypeScript)**
+#### Frontend (React + TypeScript)
+
 - Client-side AES-256-GCM encryption using Web Crypto API
 - Multi-file code editor with syntax highlighting
 - QR code generation for easy sharing
 - No plaintext ever leaves the browser
 
-**Backend (FastAPI)**
+#### Backend (FastAPI)
+
 - Async Python API with SQLAlchemy ORM
 - Handles only encrypted blobs and metadata
 - Presigned S3 URLs for direct client uploads
 - Access control: read limits and expiration
 
-**Database (PostgreSQL)**
+#### Database (PostgreSQL)
+
 - Stores gist metadata (UUID, timestamps, read count)
 - Tracks expiration and access limits
 - No plaintext content stored
 
-**Storage (MinIO/S3)**
+#### Storage (MinIO/S3)
+
 - Object storage for encrypted blobs
 - CORS-enabled for browser direct upload
 - Automatic cleanup of expired gists
 
-**Reverse Proxy (Traefik)**
+#### Reverse Proxy (Traefik)
+
 - Routes requests to frontend/backend/S3
 - Load balancing and SSL termination
 - Dashboard for monitoring
 
 ## How It Works
 
-### Local Mode
+### URL Mode
+
 1. Create gist -> browser compresses it
 2. Share URL with data in fragment: `/gist/abc123#CompressedData`
 3. Recipient uncompress data in browser
 
 ### Remote Mode
+
 1. Create gist → Browser encrypts with random AES-256 key
 2. Encrypted blob uploaded to S3, metadata to PostgreSQL
 3. Share URL with key in fragment: `/gist/abc123#key`
@@ -95,6 +103,7 @@ docker-compose up -d
 ```
 
 Services included:
+
 - Frontend (React on nginx)
 - Backend (FastAPI)
 - PostgreSQL database
@@ -104,12 +113,14 @@ Services included:
 ### Kubernetes with Helm
 
 **Install dependencies:**
+
 ```bash
 cd helm/securegist
 helm dependency update
 ```
 
 **Deploy to dev:**
+
 ```bash
 helm install securegist . \
   -f values.yaml \
@@ -119,6 +130,7 @@ helm install securegist . \
 ```
 
 **Deploy to production:**
+
 ```bash
 helm install securegist . \
   -f values.yaml \
@@ -128,12 +140,14 @@ helm install securegist . \
 ```
 
 **Check status:**
+
 ```bash
 kubectl get pods -n securegist-prod
 kubectl get svc -n securegist-prod
 ```
 
 **Upgrade:**
+
 ```bash
 helm upgrade securegist . \
   -f values-prod.yaml \
@@ -141,6 +155,7 @@ helm upgrade securegist . \
 ```
 
 **Helm chart includes:**
+
 - Backend and frontend deployments with configurable replicas
 - PostgreSQL via Bitnami chart (with persistence)
 - MinIO for S3-compatible storage
@@ -151,6 +166,7 @@ helm upgrade securegist . \
 ## Development
 
 **Backend**:
+
 ```bash
 cd backend
 uv sync
@@ -158,6 +174,7 @@ uv run uvicorn src.main:app --reload
 ```
 
 **Frontend**:
+
 ```bash
 cd frontend
 npm install
@@ -166,13 +183,27 @@ npm run dev
 
 See [backend/README.md](./backend/README.md) and [frontend/README.md](./frontend/README.md) for details.
 
+## GitHub Pages (Frontend, Local-only)
+
+You can deploy the frontend to GitHub Pages in local-only mode (no backend).
+
+Set these env vars for the frontend build:
+
+```bash
+VITE_LOCAL_ONLY=true
+VITE_USE_HASH_ROUTER=false
+VITE_BASE_PATH=/<your-repo-name>/
+```
+
+Then build the frontend and publish the `dist/` folder to GitHub Pages.
+
 ## API
 
 - `POST /api/gists` - Create gist
 - `GET /api/gists/{id}` - Get metadata
 - `DELETE /api/gists/{id}` - Delete gist
 
-Docs: http://localhost/api/docs
+Docs: <http://localhost/api/docs>
 
 ## Security
 

@@ -172,6 +172,10 @@ const Home = ({ initialGist, readOnly = false }: HomeProps) => {
 
     const saveGistBackend = async () => {
         try {
+            if (!config.BACKEND_ENABLED) {
+                alert('Backend is disabled in local-only mode');
+                return;
+            }
             setLoading(true);
             const key = await generateKey();
             const jsonString = JSON.stringify(gist);
@@ -277,6 +281,11 @@ const Home = ({ initialGist, readOnly = false }: HomeProps) => {
                         <p className="text-gray-500 dark:text-gray-400 text-sm font-medium ml-1">
                             {mode === 'edit' ? 'Create a secure, anonymous gist' : 'Viewing secure content'}
                         </p>
+                        {config.LOCAL_ONLY && (
+                            <span className="inline-flex items-center gap-2 text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 w-fit">
+                                Local-only mode
+                            </span>
+                        )}
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
@@ -303,48 +312,54 @@ const Home = ({ initialGist, readOnly = false }: HomeProps) => {
                                 <button onClick={saveGistUrl} className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-semibold transition-all shadow-sm">
                                     <LinkIcon className="w-4 h-4" /> URL Mode
                                 </button>
-                                <div className="relative" ref={settingsRef}>
-                                    <div className="flex rounded-xl shadow-sm bg-blue-600 hover:bg-blue-700 transition-all shadow-blue-500/20">
-                                        <button onClick={saveGistBackend} className="flex items-center gap-2 px-4 py-2.5 text-white text-sm font-semibold border-r border-blue-500">
-                                            <Lock className="w-4 h-4" /> Encrypt & Save
-                                        </button>
-                                        <button onClick={() => setShowSettings(!showSettings)} className="px-3 py-2.5 text-white hover:bg-blue-800 rounded-r-xl transition-colors">
-                                            <Settings className="w-4 h-4" />
-                                        </button>
-                                    </div>
+                                {config.BACKEND_ENABLED ? (
+                                    <div className="relative" ref={settingsRef}>
+                                        <div className="flex rounded-xl shadow-sm bg-blue-600 hover:bg-blue-700 transition-all shadow-blue-500/20">
+                                            <button onClick={saveGistBackend} className="flex items-center gap-2 px-4 py-2.5 text-white text-sm font-semibold border-r border-blue-500">
+                                                <Lock className="w-4 h-4" /> Encrypt & Save
+                                            </button>
+                                            <button onClick={() => setShowSettings(!showSettings)} className="px-3 py-2.5 text-white hover:bg-blue-800 rounded-r-xl transition-colors">
+                                                <Settings className="w-4 h-4" />
+                                            </button>
+                                        </div>
 
-                                    {showSettings && (
-                                        <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 z-20 animate-in fade-in zoom-in-95 duration-200">
-                                            <h4 className="font-semibold text-sm mb-3">Encryption Settings</h4>
-                                            <div className="space-y-4">
-                                                <div>
-                                                    <label className="text-xs font-medium text-gray-500 uppercase block mb-1">Expiration</label>
-                                                    <select
-                                                        value={expiration}
-                                                        onChange={(e) => setExpiration(e.target.value)}
-                                                        className="w-full text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500"
-                                                    >
-                                                        <option value="1d">1 Day</option>
-                                                        <option value="7d">7 Days</option>
-                                                        <option value="30d">30 Days</option>
-                                                        <option value="90d">90 Days</option>
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    <label className="text-xs font-medium text-gray-500 uppercase block mb-1">Max Reads</label>
-                                                    <input
-                                                        type="number"
-                                                        min="1"
-                                                        max="1000"
-                                                        value={maxReads}
-                                                        onChange={(e) => setMaxReads(parseInt(e.target.value))}
-                                                        className="w-full text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500"
-                                                    />
+                                        {showSettings && (
+                                            <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 z-20 animate-in fade-in zoom-in-95 duration-200">
+                                                <h4 className="font-semibold text-sm mb-3">Encryption Settings</h4>
+                                                <div className="space-y-4">
+                                                    <div>
+                                                        <label className="text-xs font-medium text-gray-500 uppercase block mb-1">Expiration</label>
+                                                        <select
+                                                            value={expiration}
+                                                            onChange={(e) => setExpiration(e.target.value)}
+                                                            className="w-full text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500"
+                                                        >
+                                                            <option value="1d">1 Day</option>
+                                                            <option value="7d">7 Days</option>
+                                                            <option value="30d">30 Days</option>
+                                                            <option value="90d">90 Days</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-xs font-medium text-gray-500 uppercase block mb-1">Max Reads</label>
+                                                        <input
+                                                            type="number"
+                                                            min="1"
+                                                            max="1000"
+                                                            value={maxReads}
+                                                            onChange={(e) => setMaxReads(parseInt(e.target.value))}
+                                                            className="w-full text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )}
-                                </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 px-3 py-2.5">
+                                        Backend disabled
+                                    </span>
+                                )}
                             </>
                         )}
                     </div>
@@ -510,11 +525,11 @@ const Home = ({ initialGist, readOnly = false }: HomeProps) => {
 
             {/* Share Modal */}
             {showQR && (
-                <div 
+                <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
                     onClick={() => setShowQR(false)}
                 >
-                    <div 
+                    <div
                         className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 max-w-md w-full relative animate-in fade-in zoom-in duration-200 flex flex-col gap-6 border border-gray-100 dark:border-gray-700"
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -575,11 +590,11 @@ const Home = ({ initialGist, readOnly = false }: HomeProps) => {
 
             {/* Service Mechanics Info Modal */}
             {showInfo && (
-                <div 
+                <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
                     onClick={() => setShowInfo(false)}
                 >
-                    <div 
+                    <div
                         className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 max-w-2xl w-full relative animate-in fade-in zoom-in duration-200 overflow-y-auto max-h-[90vh]"
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -597,10 +612,10 @@ const Home = ({ initialGist, readOnly = false }: HomeProps) => {
                             <section className="space-y-3">
                                 <h4 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
                                     <Globe className="w-5 h-5 text-emerald-500" />
-                                    Local Mode
+                                    URL Mode
                                 </h4>
                                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                                    In Local Mode, your data <strong>never leaves your browser</strong>.
+                                    In URL Mode, your data <strong>never leaves your browser</strong>.
                                     The content is compressed using <code>LZString</code> and encoded directly into the URL hash.
                                     This is perfect for small code snippets and sharing via instant messengers.
                                     Since no server is involved, the data is as private as the link itself.

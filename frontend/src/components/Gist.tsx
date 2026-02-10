@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import Home from './Home';
 import { importKey, decryptData } from '../lib/crypto';
 import { GistData } from '../lib/gist-utils';
@@ -15,6 +15,9 @@ const Gist = () => {
     useEffect(() => {
         const fetchGist = async () => {
             try {
+                if (!config.BACKEND_ENABLED) {
+                    throw new Error('Backend is disabled in local-only mode');
+                }
                 if (!id) throw new Error("No Gist ID provided");
 
                 // Get key from hash (remove #)
@@ -39,7 +42,7 @@ const Gist = () => {
                 // Fetch encrypted content from S3
                 const contentResponse = await fetch(download_url);
                 if (!contentResponse.ok) throw new Error("Failed to download content");
-                
+
                 const encrypted_content = await contentResponse.text();
 
                 // Decrypt
@@ -73,9 +76,9 @@ const Gist = () => {
                 <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md max-w-md">
                     <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
                     <p className="text-gray-700 dark:text-gray-300">{error}</p>
-                    <a href="/" className="inline-block mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                    <Link to="/" className="inline-block mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
                         Go Home
-                    </a>
+                    </Link>
                 </div>
             </div>
         );

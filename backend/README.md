@@ -21,7 +21,7 @@ A robust, asynchronous FastAPI backend for SecureGist, designed to store encrypt
 1. **Clone the repository**:
 
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/Derad6709/SecureGist
     cd securegist/backend
     ```
 
