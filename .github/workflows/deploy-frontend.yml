@@ -1,7 +1,6 @@
 name: Deploy Frontend to GitHub Pages
 on:
     push:
-        branches: [main]
         tags: ["v*"]
     workflow_dispatch:
 permissions:
