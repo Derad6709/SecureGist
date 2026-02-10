@@ -19,7 +19,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Access at: http://localhost:5173
+Access at: <http://localhost:5173>
 
 ## Environment
 
@@ -109,9 +109,9 @@ npm run build
 # Output: dist/
 ```
 
-## GitHub Pages (Local-only)
+## GitHub Pages (URL-only)
 
-For GitHub Pages in local-only mode you need the correct base path, and **do not** use hash routing because the URL hash is used to store the gist data.
+For GitHub Pages in URL-only mode you need the correct base path, and **do not** use hash routing because the URL hash is used to store the gist data.
 
 ```bash
 # .env for GitHub Pages

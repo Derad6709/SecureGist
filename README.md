@@ -183,9 +183,9 @@ npm run dev
 
 See [backend/README.md](./backend/README.md) and [frontend/README.md](./frontend/README.md) for details.
 
-## GitHub Pages (Frontend, Local-only)
+## GitHub Pages (Frontend, URL-only)
 
-You can deploy the frontend to GitHub Pages in local-only mode (no backend).
+You can deploy the frontend to GitHub Pages in URL-only mode (no backend).
 
 Set these env vars for the frontend build:
 

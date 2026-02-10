@@ -16,7 +16,7 @@ const Gist = () => {
         const fetchGist = async () => {
             try {
                 if (!config.BACKEND_ENABLED) {
-                    throw new Error('Backend is disabled in local-only mode');
+                    throw new Error('Backend is disabled in URL-only mode');
                 }
                 if (!id) throw new Error("No Gist ID provided");
 

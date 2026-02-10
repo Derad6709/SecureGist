@@ -173,7 +173,7 @@ const Home = ({ initialGist, readOnly = false }: HomeProps) => {
     const saveGistBackend = async () => {
         try {
             if (!config.BACKEND_ENABLED) {
-                alert('Backend is disabled in local-only mode');
+                alert('Backend is disabled in URL-only mode');
                 return;
             }
             setLoading(true);
@@ -283,7 +283,7 @@ const Home = ({ initialGist, readOnly = false }: HomeProps) => {
                         </p>
                         {config.LOCAL_ONLY && (
                             <span className="inline-flex items-center gap-2 text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 w-fit">
-                                Local-only mode
+                                URL-only mode
                             </span>
                         )}
                     </div>
