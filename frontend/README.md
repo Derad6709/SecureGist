@@ -90,7 +90,7 @@ const decrypted = await crypto.subtle.decrypt(
 
 ## Structure
 
-```
+```txt
 src/
 ├── components/
 │   ├── Home.tsx      # Gist creation
@@ -106,8 +106,9 @@ src/
 
 ```bash
 npm run build
-# Output: dist/
 ```
+
+Oututput is in `dist`.
 
 ## GitHub Pages (URL-only)
 

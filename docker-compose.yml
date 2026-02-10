@@ -1,5 +1,4 @@
 services:
-  # Database
   db:
     image: postgres:16
     restart: always
@@ -15,14 +14,12 @@ services:
       timeout: 5s
       retries: 5
 
-  # Object Storage (S3 compatible)
   minio:
     image: minio/minio
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
-    # Ports 9000/9001 are no longer exposed directly
     volumes:
       - minio_data:/data
     healthcheck:
@@ -37,7 +34,6 @@ services:
       - "traefik.http.middlewares.minio-strip.stripprefix.prefixes=/s3"
       - "traefik.http.services.minio.loadbalancer.server.port=9000"
 
-  # Create default bucket in MinIO
   createbuckets:
     image: minio/mc
     depends_on:
@@ -53,7 +49,6 @@ services:
       exit 0;
       "
 
-  # Backend API
   backend:
     build: ./backend
     restart: always
@@ -75,7 +70,6 @@ services:
       - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
       - "traefik.http.services.backend.loadbalancer.server.port=8000"
 
-  # Frontend App
   frontend:
     build: 
       context: ./frontend
@@ -87,7 +81,6 @@ services:
       - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
 
-  # Traefik Gateway
   traefik:
     image: traefik:v2.10
     command:
@@ -97,7 +90,7 @@ services:
       - "--entrypoints.web.address=:80"
     ports:
       - "80:80"
-      - "8080:8080" # Dashboard
+      - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
