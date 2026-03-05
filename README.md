@@ -20,7 +20,7 @@ cd SecureGist
 docker-compose up -d
 ```
 
-Access at: <http://localhost>
+After that, acces it at: <http://localhost>
 
 ## Architecture
 
@@ -203,7 +203,7 @@ Then build the frontend and publish the `dist/` folder to GitHub Pages.
 - `GET /api/gists/{id}` - Get metadata
 - `DELETE /api/gists/{id}` - Delete gist
 
-Docs: <http://localhost/api/docs>
+Docs can be found at <http://localhost/api/docs> when project is up.
 
 ## Security
 
