@@ -8,6 +8,7 @@ A robust, asynchronous FastAPI backend for SecureGist, designed to store encrypt
 - **Access Control**: Supports "burn after reading" (max reads) and time-based expiration.
 - **High Performance**: Built with `FastAPI`, `SQLAlchemy` (async), and `asyncpg`.
 - **Production Ready**: structured in a `src` package layout with comprehensive testing.
+- **Schema Migrations**: Uses Alembic for database versioning and upgrades.
 - **Modern Tooling**: Uses `uv` for fast dependency management.
 
 ## 🛠 Prerequisites
@@ -43,13 +44,19 @@ A robust, asynchronous FastAPI backend for SecureGist, designed to store encrypt
 
 ## 🗄️ Database Setup
 
-The application automatically creates the necessary database tables on startup using SQLAlchemy's metadata. Ensure your PostgreSQL server is running and the database defined in `DATABASE_URL` exists.
+The application uses Alembic migrations instead of auto-creating tables at startup. Ensure your PostgreSQL server is running and the database defined in `DATABASE_URL` exists, then apply the schema with:
+
+```bash
+alembic upgrade head
+```
 
 If using Docker:
 
 ```bash
 docker-compose up -d db
 ```
+
+The backend container also runs `alembic upgrade head` before starting Uvicorn.
 
 ## ▶️ Running the Server
 
@@ -62,6 +69,12 @@ uv run uvicorn src.main:app --reload
 ```
 
 Using standard python/pip:
+
+Before starting the server, apply migrations:
+
+```bash
+alembic upgrade head
+```
 
 The API will be available at `http://localhost:8000`.
 
@@ -106,9 +119,11 @@ backend/
 │   ├── crud.py         # Database operations
 │   ├── db.py           # Database connection setup
 │   ├── dependencies.py # Dependency injection (get_db)
-│   ├── main.py         # App entry point & lifespan
+│   ├── main.py         # App entry point
 │   ├── models.py       # SQLAlchemy ORM models
 │   └── schemas.py      # Pydantic schemas
+├── alembic/            # Database migrations
+├── alembic.ini         # Alembic configuration
 ├── tests/              # Test suite
 │   ├── conftest.py     # Pytest configuration & fixtures
 │   ├── test_api.py     # Integration tests

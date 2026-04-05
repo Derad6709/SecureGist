@@ -7,18 +7,16 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-# Pass API URL at build time or use a placeholder to be replaced at runtime
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
 RUN npm run build
 
-# Production Stage
-FROM nginx:alpine
+FROM nginx:stable-alpine3.23-slim
 
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]
