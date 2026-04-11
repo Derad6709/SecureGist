@@ -75,7 +75,7 @@ After that, acces it at: <http://localhost>
 ### URL Mode
 
 1. Create gist -> browser compresses it
-2. Share URL with data in fragment: `/gist/abc123#CompressedData`
+2. Share URL with data in fragment: `/gist/#CompressedData`
 3. Recipient uncompress data in browser
 
 ### Remote Mode
