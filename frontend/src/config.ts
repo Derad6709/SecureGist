@@ -8,7 +8,7 @@ const BASE_PATH = import.meta.env.BASE_URL || '/';
 
 export const config = {
   API_URL,
-  APP_NAME: 'SecureGist',
+  APP_NAME: 'SecureGist v07',
   MAX_FILE_SIZE_MB: 5,
   LOCAL_ONLY,
   BACKEND_ENABLED: !LOCAL_ONLY,
