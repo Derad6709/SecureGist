@@ -1,4 +1,4 @@
-FROM python:3.14-alpine3.22 AS builder
+FROM python:3.14-alpine3.22@sha256:b0d9cd5ed77285b2563c86ca10b53578249ca1a08d14e5b69b7970884a9fb539 AS builder
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 ENV UV_COMPILE_BYTECODE=1 \
@@ -27,7 +27,7 @@ COPY --from=builder /app/.venv /app/.venv
 COPY --from=builder /app/alembic.ini /app/alembic.ini
 COPY --from=builder /app/migrations /app/migrations
 COPY --from=builder /app/src /app/src
-
+    
 RUN addgroup -S app && adduser -S app -G app && chown -R app:app /app
 USER app
 
